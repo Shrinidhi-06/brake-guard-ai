@@ -18,7 +18,7 @@ export const Route = createFileRoute("/analytics")({
 });
 
 const RANGES: { k: RangeKey; l: string }[] = [{ k: "today", l: "Today" }, { k: "7d", l: "7 Days" }, { k: "30d", l: "30 Days" }];
-const TYPE_COLORS = ["var(--danger)", "var(--info)", "var(--warn)", "var(--primary)", "var(--danger)", "var(--muted-foreground)"];
+const TYPE_COLORS = ["var(--danger)", "var(--info)", "var(--warn)", "var(--primary)", "var(--muted-foreground)"];
 const SEV_COLORS = ["var(--safe)", "var(--warn)", "var(--primary)", "var(--danger)"];
 const axis = { stroke: "var(--muted-foreground)", fontSize: 10, tickLine: false, axisLine: false } as const;
 

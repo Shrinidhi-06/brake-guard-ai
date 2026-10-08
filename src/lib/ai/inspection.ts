@@ -6,7 +6,7 @@ import type { BoundingBox, DefectType, Inspection, Severity } from "@/types";
  * No computer-vision model runs here — swap `analyzeImage` for a call to POST /api/inspect
  * backed by a real YOLO/vision model later.
  */
-export type ScenarioKey = "pass" | "crack" | "corrosion" | "scratch" | "wear" | "hole";
+export type ScenarioKey = "pass" | "crack" | "corrosion" | "scratch" | "wear";
 
 export interface ScenarioResult {
   status: "pass" | "defect";
@@ -99,21 +99,6 @@ export const SCENARIOS: Record<ScenarioKey, { label: string; result: ScenarioRes
       boxes: [{ x: 58, y: 10, w: 30, h: 24, label: "Uneven Wear 90%" }],
     },
   },
-  hole: {
-    label: "Hole / Perforation — Critical",
-    result: {
-      status: "defect",
-      defect: "Hole / Perforation",
-      severity: "critical",
-      confidence: 0.928,
-      risk: 0.95,
-      explanation:
-        "A through-hole / perforation with raised metal burrs was detected on the braking surface. A perforation compromises the structural integrity of the rotor and makes it unsafe for use.",
-      action: "STOP INSPECTION",
-      recommendation: "Stop inspection and perform detailed component inspection/replacement assessment.",
-      boxes: [{ x: 68, y: 12, w: 16, h: 16, label: "Hole / Perforation 93%" }],
-    },
-  },
 };
 
 export function scenarioFromFile(name: string, size: number): ScenarioKey {
@@ -122,11 +107,10 @@ export function scenarioFromFile(name: string, size: number): ScenarioKey {
   if (/rust|corros/.test(n)) return "corrosion";
   if (/scratch/.test(n)) return "scratch";
   if (/wear/.test(n)) return "wear";
-  if (/hole|perforat/.test(n)) return "hole";
   if (/pass|good|ok|clean/.test(n)) return "pass";
   let h = size;
   for (const ch of n) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  const keys: ScenarioKey[] = ["pass", "crack", "corrosion", "scratch", "wear", "hole"];
+  const keys: ScenarioKey[] = ["pass", "crack", "corrosion", "scratch", "wear"];
   return keys[h % keys.length] ?? "pass";
 }
 

@@ -1,6 +1,6 @@
 // Domain types. Shaped to map 1:1 onto future Postgres tables / FastAPI models.
 
-export type DefectType = "Surface Crack" | "Scratch" | "Corrosion" | "Uneven Wear" | "Hole / Perforation" | "Other Anomaly";
+export type DefectType = "Surface Crack" | "Scratch" | "Corrosion" | "Uneven Wear" | "Other Anomaly";
 export type Severity = "none" | "low" | "medium" | "high" | "critical";
 export type RiskLevel = "low" | "medium" | "high" | "critical";
 

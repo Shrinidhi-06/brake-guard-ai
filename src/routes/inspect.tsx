@@ -32,7 +32,6 @@ const SAMPLES: { key: ScenarioKey; label: string }[] = [
   { key: "pass", label: "Clean" },
   { key: "corrosion", label: "Corrosion" },
   { key: "wear", label: "Wear" },
-  { key: "hole", label: "Hole" },
 ];
 
 function InspectPage() {
@@ -213,7 +212,7 @@ function InspectPage() {
           {phase !== "scanning" && phase !== "done" && (
             <div className="mt-3">
               <div className="label-xs mb-2">Or use a demo image</div>
-              <div className="grid grid-cols-5 gap-2">
+              <div className="grid grid-cols-4 gap-2">
                 {SAMPLES.map((s) => (
                   <button key={s.key} onClick={() => pickSample(s.key)} className={cn("group overflow-hidden rounded-md border text-left transition-colors", fileName === `demo-brake-disc-${s.key}.jpg` ? "border-primary" : "border-border hover:border-primary/50")}>
                     <img src={DEMO_IMAGES[s.key]} alt={`Demo ${s.label} brake disc`} loading="lazy" width={1024} height={1024} className="aspect-square w-full object-cover opacity-80 group-hover:opacity-100" />
@@ -325,7 +324,7 @@ function InspectPage() {
               <div>
                 <div className="label-xs mb-2">Class probabilities</div>
                 {[...DEFECT_TYPES, "No Defect" as const].map((d) => {
-                  const p = d === (result.defect ?? "No Defect") ? result.confidence : (1 - result.confidence) / 6;
+                  const p = d === (result.defect ?? "No Defect") ? result.confidence : (1 - result.confidence) / 5;
                   return (
                     <div key={d} className="mb-1.5 grid grid-cols-[110px_1fr_48px] items-center gap-2">
                       <span className="text-xs text-muted-foreground">{d}</span>
