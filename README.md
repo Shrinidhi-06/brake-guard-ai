@@ -59,7 +59,9 @@ Set `VITE_API_BASE_URL=http://localhost:8000` to point the REST client at FastAP
 
 ## 7. Demo mode
 `DEMO_MODE=true` (default) — the app runs fully offline from external AI APIs. Scenarios:
-1. PASS · 2. Surface Crack — High · 3. Corrosion — Medium · 4. Scratch — Low · 5. Uneven Wear — Medium
+1. PASS · 2. Surface Crack — High · 3. Corrosion — Medium · 4. Scratch — Low · 5. Uneven Wear — Medium · 6. Hole / Perforation — Critical
+
+The prototype classifies images into five visual condition categories: Clean, Scratch, Wear, Corrosion, and Hole / Perforation. Additional defect classes require training and validation using a sufficiently large, properly labeled brake-component image dataset.
 
 Pick one in the **Demo Scenario** selector on the Inspect page, or use *Auto*, which derives the scenario from the file name (`crack`, `rust`, `scratch`, `wear`, `clean`) or a hash.
 

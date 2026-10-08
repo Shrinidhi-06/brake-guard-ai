@@ -57,6 +57,7 @@ function SettingsPage() {
         <Panel title="AI Engine" icon={<Cpu className="h-4 w-4 text-primary" />}>
           <Row label="AI Engine Status"><span className="flex items-center gap-2 text-sm text-safe"><span className="h-2 w-2 rounded-full bg-safe animate-pulse-dot" />Online</span></Row>
           <Row label="Model" desc="Deterministic demo engine — no trained weights loaded"><span className="num text-sm">AutoSentinel Vision v1 <Tag tone="warn" className="ml-1">Demo</Tag></span></Row>
+          <Row label="Supported classes" desc="Clean · Scratch · Wear · Corrosion · Hole / Perforation"><Tag tone="info">5 categories</Tag></Row>
           <Row label={<Term tip="Detections below this confidence are reported as 'Other Anomaly — needs review'.">Confidence Threshold</Term>} desc={`${s.threshold}%`}>
             <Slider className="w-40" min={50} max={99} step={1} value={[s.threshold]} onValueChange={([v = 80]) => set("threshold", v)} />
           </Row>
@@ -84,6 +85,14 @@ function SettingsPage() {
               </SelectContent>
             </Select>
           </Row>
+        </Panel>
+        <Panel title="About this prototype" icon={<Cpu className="h-4 w-4 text-muted-foreground" />} className="lg:col-span-2">
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            Current prototype supports five visual condition categories. Additional defect classes require training and validation using a sufficiently large, properly labeled brake-component image dataset.
+          </p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            All inspection results, including Hole / Perforation, are demo-scenario outputs from the deterministic prototype engine — not validated machine-learning predictions.
+          </p>
         </Panel>
       </div>
     </>
