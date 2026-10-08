@@ -33,7 +33,7 @@ export function ConditionInput({ k, label, value, onChange, tip, hint }: { k: ke
           <span className="w-9 text-xs text-muted-foreground">{lim.unit}</span>
         </div>
       </div>
-      <Slider value={[value]} min={lim.min} max={lim.max} step={lim.step} onValueChange={([v = value]) => onChange(+v.toFixed(lim.step < 1 ? 1 : 0))} />
+      <Slider value={[value]} min={lim.min} max={lim.max} step={lim.step} onValueChange={([v]) => onChange(+v.toFixed(lim.step < 1 ? 1 : 0))} />
       <div className="num mt-1 flex justify-between text-[10px] text-muted-foreground">
         <span>{lim.min}</span>{hint && <span>{hint}</span>}<span>{lim.max}</span>
       </div>

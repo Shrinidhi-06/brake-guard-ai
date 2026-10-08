@@ -58,7 +58,7 @@ function SettingsPage() {
           <Row label="AI Engine Status"><span className="flex items-center gap-2 text-sm text-safe"><span className="h-2 w-2 rounded-full bg-safe animate-pulse-dot" />Online</span></Row>
           <Row label="Model" desc="Deterministic demo engine — no trained weights loaded"><span className="num text-sm">AutoSentinel Vision v1 <Tag tone="warn" className="ml-1">Demo</Tag></span></Row>
           <Row label={<Term tip="Detections below this confidence are reported as 'Other Anomaly — needs review'.">Confidence Threshold</Term>} desc={`${s.threshold}%`}>
-            <Slider className="w-40" min={50} max={99} step={1} value={[s.threshold]} onValueChange={([v = 80]) => set("threshold", v)} />
+            <Slider className="w-40" min={50} max={99} step={1} value={[s.threshold]} onValueChange={([v]) => set("threshold", v)} />
           </Row>
         </Panel>
         <Panel title="Inspection Settings" icon={<ScanSearch className="h-4 w-4 text-info" />}>

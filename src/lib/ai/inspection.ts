@@ -111,7 +111,7 @@ export function scenarioFromFile(name: string, size: number): ScenarioKey {
   let h = size;
   for (const ch of n) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
   const keys: ScenarioKey[] = ["pass", "crack", "corrosion", "scratch", "wear"];
-  return keys[h % keys.length] ?? "pass";
+  return keys[h % keys.length];
 }
 
 export async function analyzeImage(scenario: ScenarioKey): Promise<ScenarioResult> {

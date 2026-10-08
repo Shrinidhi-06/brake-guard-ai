@@ -66,7 +66,7 @@ function MonitoringPage() {
     return () => clearInterval(id);
   }, [running, machine]);
 
-  const last = data[data.length - 1] ?? data[0]!;
+  const last = data[data.length - 1];
   const status: "normal" | "warning" | "critical" = last.vibration > 6 || last.risk > 60 ? "critical" : last.vibration > VIB_LIMIT || last.risk > 30 ? "warning" : "normal";
   const prev = useRef(status);
   useEffect(() => {
@@ -156,7 +156,7 @@ function MonitoringPage() {
   );
 }
 
-function ChartPanel({ title, data, k, color, unit, domain, limit, className }: { title: string; data: Pt[]; k: keyof Pt; color: string; unit: string; domain: [number, number]; limit?: number; className?: string | undefined }) {
+function ChartPanel({ title, data, k, color, unit, domain, limit, className }: { title: string; data: Pt[]; k: keyof Pt; color: string; unit: string; domain: [number, number]; limit?: number; className?: string }) {
   return (
     <Panel title={title} className={className} right={<Tag tone="info">Live · simulated</Tag>}>
       <div className="h-48">

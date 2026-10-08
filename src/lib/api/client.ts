@@ -4,7 +4,7 @@
  */
 import type { OperatingConditions } from "@/types";
 
-const BASE = (import.meta.env["VITE_API_BASE_URL"] as string | undefined) ?? "";
+const BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "";
 
 async function req<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, init);
