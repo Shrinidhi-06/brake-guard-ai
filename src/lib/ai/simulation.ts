@@ -21,7 +21,13 @@ export function simulate(current: OperatingConditions, simulated: OperatingCondi
   const tips: string[] = [];
   if (simulated.vibration > 3.2) tips.push(`reduce vibration from ${simulated.vibration.toFixed(1)} mm/s to approximately 3.0 mm/s`);
   if (simulated.temperature > 87) tips.push(`lower temperature from ${simulated.temperature}°C to approximately 85°C`);
-  if (simulated.rpm > 1500) tips.push(`reduce spindle speed toward 1,420 RPM`);
+  if (simulated.rpm > 1500 && tips.length > 0) tips.push(`reduce spindle speed toward 1,420 RPM`);
+  if (tips.length === 0 && simulated.vibration < current.vibration && simulated.temperature < current.temperature) {
+    return {
+      currentRisk, simulatedRisk, riskReduction, reductionLevel,
+      recommendation: `Reduce vibration from ${current.vibration.toFixed(1)} mm/s to approximately ${simulated.vibration.toFixed(1)} mm/s and lower temperature to approximately ${simulated.temperature}°C.`,
+    };
+  }
   if (Math.abs(simulated.pressure - 5.8) > 0.6) tips.push(`bring pressure back toward 5.8 bar`);
 
   let recommendation: string;
@@ -32,7 +38,7 @@ export function simulate(current: OperatingConditions, simulated: OperatingCondi
         : "Simulated conditions do not reduce risk. Reduce vibration to approximately 3.0 mm/s and lower temperature to approximately 85°C.";
   } else {
     const s = tips.join(" and ");
-    recommendation = s[0].toUpperCase() + s.slice(1) + ".";
+    recommendation = s.charAt(0).toUpperCase() + s.slice(1) + ".";
   }
   return { currentRisk, simulatedRisk, riskReduction, reductionLevel, recommendation };
 }

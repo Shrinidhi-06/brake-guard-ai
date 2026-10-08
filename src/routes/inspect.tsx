@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { ANALYSIS_STEPS, SCENARIOS, analyzeImage, scenarioFromFile, type ScenarioKey, type ScenarioResult } from "@/lib/ai/inspection";
+import { detectHoles } from "@/lib/ai/holeDetector";
+import type { BoundingBox } from "@/types";
 import { DEFECT_TYPES, DEMO_IMAGES } from "@/lib/mock/data";
 import { loadSettings, nextComponentId, nextInspectionId, saveInspection } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -32,6 +34,7 @@ const SAMPLES: { key: ScenarioKey; label: string }[] = [
   { key: "pass", label: "Clean" },
   { key: "corrosion", label: "Corrosion" },
   { key: "wear", label: "Wear" },
+  { key: "hole", label: "Hole" },
 ];
 
 function InspectPage() {
@@ -47,6 +50,7 @@ function InspectPage() {
   const [drag, setDrag] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
+  const [holeBoxes, setHoleBoxes] = useState<BoundingBox[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const reset = useCallback(() => {
@@ -54,15 +58,20 @@ function InspectPage() {
     if (inputRef.current) inputRef.current.value = "";
   }, []);
 
-  function acceptFile(f: File | undefined) {
+  function acceptFile(f: File | undefined): void {
     if (!f) return;
-    if (!ACCEPT.includes(f.type)) return toast.error("Unsupported file type", { description: "Please upload a JPG, JPEG or PNG image." });
-    if (f.size > 10 * 1024 * 1024) return toast.error("File too large", { description: "Maximum size is 10 MB." });
+    if (!ACCEPT.includes(f.type)) { toast.error("Unsupported file type", { description: "Please upload a JPG, JPEG or PNG image." }); return; }
+    if (f.size > 10 * 1024 * 1024) { toast.error("File too large", { description: "Maximum size is 10 MB." }); return; }
     const reader = new FileReader();
-    reader.onload = () => {
-      setImage(reader.result as string);
+    reader.onload = async () => {
+      const url = reader.result as string;
+      setImage(url);
       setFileName(f.name);
-      setAutoKey(scenarioFromFile(f.name, f.size));
+      let boxes: BoundingBox[] = [];
+      try { boxes = await detectHoles(url); } catch { boxes = []; }
+      setHoleBoxes(boxes);
+      // Physical openings take priority over corrosion/texture-based scenarios.
+      setAutoKey(boxes.length > 0 ? "hole" : scenarioFromFile(f.name, f.size));
       setPhase("ready"); setResult(null); setSaved(false);
       toast.success("Image loaded", { description: f.name });
     };
@@ -73,6 +82,7 @@ function InspectPage() {
   function pickSample(k: ScenarioKey) {
     setImage(DEMO_IMAGES[k]);
     setFileName(`demo-brake-disc-${k}.jpg`);
+    setHoleBoxes([]);
     setAutoKey(k);
     setPhase("ready"); setResult(null); setSaved(false);
   }
@@ -88,6 +98,7 @@ function InspectPage() {
     }
     try {
       const res = await analyzeImage(activeKey);
+      if (activeKey === "hole" && holeBoxes.length > 0) res.boxes = holeBoxes;
       const rec: Inspection = {
         id: nextInspectionId(),
         componentId: nextComponentId(),
@@ -212,7 +223,7 @@ function InspectPage() {
           {phase !== "scanning" && phase !== "done" && (
             <div className="mt-3">
               <div className="label-xs mb-2">Or use a demo image</div>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-5 gap-2">
                 {SAMPLES.map((s) => (
                   <button key={s.key} onClick={() => pickSample(s.key)} className={cn("group overflow-hidden rounded-md border text-left transition-colors", fileName === `demo-brake-disc-${s.key}.jpg` ? "border-primary" : "border-border hover:border-primary/50")}>
                     <img src={DEMO_IMAGES[s.key]} alt={`Demo ${s.label} brake disc`} loading="lazy" width={1024} height={1024} className="aspect-square w-full object-cover opacity-80 group-hover:opacity-100" />
@@ -324,7 +335,7 @@ function InspectPage() {
               <div>
                 <div className="label-xs mb-2">Class probabilities</div>
                 {[...DEFECT_TYPES, "No Defect" as const].map((d) => {
-                  const p = d === (result.defect ?? "No Defect") ? result.confidence : (1 - result.confidence) / 5;
+                  const p = d === (result.defect ?? "No Defect") ? result.confidence : (1 - result.confidence) / 6;
                   return (
                     <div key={d} className="mb-1.5 grid grid-cols-[110px_1fr_48px] items-center gap-2">
                       <span className="text-xs text-muted-foreground">{d}</span>
@@ -367,7 +378,7 @@ function InspectPage() {
   );
 }
 
-function Stat({ label, value, color, big }: { label: React.ReactNode; value: React.ReactNode; color?: string; big?: boolean }) {
+function Stat({ label, value, color, big }: { label: React.ReactNode; value: React.ReactNode; color?: string | undefined; big?: boolean }) {
   return (
     <div className="rounded-lg border border-border bg-background/40 p-3">
       <div className="label-xs">{label}</div>

@@ -48,10 +48,10 @@ export function calculateRisk(input: OperatingConditions): RiskPrediction {
   const risk = clamp(sum, 0.02, 0.99);
   const level = riskLevel(risk);
 
-  const top = (Object.entries(contributors) as [string, number][]).sort((a, b) => b[1] - a[1])[0];
+  const top = (Object.entries(contributors) as [string, number][]).sort((a, b) => b[1] - a[1])[0] ?? ["vibration", 0];
   let recommendation = "Operating conditions are currently within acceptable limits. Continue monitoring.";
   if (level !== "low") {
-    const name = top[0] === "rpm" ? "RPM" : top[0] === "age" ? "Component age" : top[0][0].toUpperCase() + top[0].slice(1);
+    const name = top[0] === "rpm" ? "RPM" : top[0] === "age" ? "Component age" : top[0].charAt(0).toUpperCase() + top[0].slice(1);
     recommendation =
       level === "medium"
         ? `${name} is the primary contributor to current risk. Monitor closely and plan a corrective adjustment.`

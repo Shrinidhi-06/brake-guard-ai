@@ -6,7 +6,7 @@ import type { BoundingBox, DefectType, Inspection, Severity } from "@/types";
  * No computer-vision model runs here — swap `analyzeImage` for a call to POST /api/inspect
  * backed by a real YOLO/vision model later.
  */
-export type ScenarioKey = "pass" | "crack" | "corrosion" | "scratch" | "wear";
+export type ScenarioKey = "pass" | "crack" | "corrosion" | "scratch" | "wear" | "hole";
 
 export interface ScenarioResult {
   status: "pass" | "defect";
@@ -99,6 +99,21 @@ export const SCENARIOS: Record<ScenarioKey, { label: string; result: ScenarioRes
       boxes: [{ x: 58, y: 10, w: 30, h: 24, label: "Uneven Wear 90%" }],
     },
   },
+  hole: {
+    label: "Hole / Perforation — High",
+    result: {
+      status: "defect",
+      defect: "Hole / Perforation",
+      severity: "high",
+      confidence: 0.928,
+      risk: 0.79,
+      explanation:
+        "A physical opening with a clear boundary and a darker interior region (approximately circular/oval) was detected on the disc. This is classified as a hole / perforation rather than surface corrosion.",
+      action: "REJECT / VERIFY DESIGN",
+      recommendation: "Inspect the component for structural damage and replace/reject if the hole is unintended or outside the approved design specification.",
+      boxes: [{ x: 68, y: 12, w: 16, h: 16, label: "Hole / Perforation 93%" }],
+    },
+  },
 };
 
 export function scenarioFromFile(name: string, size: number): ScenarioKey {
@@ -107,11 +122,12 @@ export function scenarioFromFile(name: string, size: number): ScenarioKey {
   if (/rust|corros/.test(n)) return "corrosion";
   if (/scratch/.test(n)) return "scratch";
   if (/wear/.test(n)) return "wear";
+  if (/hole|perforat/.test(n)) return "hole";
   if (/pass|good|ok|clean/.test(n)) return "pass";
   let h = size;
   for (const ch of n) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  const keys: ScenarioKey[] = ["pass", "crack", "corrosion", "scratch", "wear"];
-  return keys[h % keys.length];
+  const keys: ScenarioKey[] = ["pass", "crack", "corrosion", "scratch", "wear", "hole"];
+  return keys[h % keys.length] ?? "pass";
 }
 
 export async function analyzeImage(scenario: ScenarioKey): Promise<ScenarioResult> {

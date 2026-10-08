@@ -17,7 +17,7 @@ export function PageHeader({ title, subtitle, tag, right }: { title: string; sub
   );
 }
 
-export function Panel({ className, children, title, icon, right }: { className?: string; children: ReactNode; title?: string; icon?: ReactNode; right?: ReactNode }) {
+export function Panel({ className, children, title, icon, right }: { className?: string | undefined; children: ReactNode; title?: string; icon?: ReactNode; right?: ReactNode }) {
   return (
     <section className={cn("panel p-5 animate-rise", className)}>
       {title && (
@@ -93,7 +93,7 @@ export function useAnimatedNumber(target: number, duration = 700) {
   return v;
 }
 
-export function AnimatedNumber({ value, decimals = 0, suffix = "" }: { value: number; decimals?: number; suffix?: string }) {
+export function AnimatedNumber({ value, decimals = 0, suffix = "" }: { value: number; decimals?: number | undefined; suffix?: string | undefined }) {
   const v = useAnimatedNumber(value);
   return (
     <span className="num">
