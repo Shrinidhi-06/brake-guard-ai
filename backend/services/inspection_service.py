@@ -15,12 +15,15 @@ SCENARIOS = {
                     boxes=[dict(x=18, y=60, w=16, h=10, label="Scratch 86%")]),
     "wear": dict(status="defect", defect="Uneven Wear", severity="medium", confidence=0.904, risk=0.52, recommendation="Hold for rework",
                  boxes=[dict(x=58, y=10, w=30, h=24, label="Uneven Wear 90%")]),
+    "hole": dict(status="defect", defect="Hole / Perforation", severity="critical", confidence=0.928, risk=0.95,
+                 recommendation="Stop inspection and perform detailed component inspection/replacement assessment.",
+                 boxes=[dict(x=68, y=12, w=16, h=16, label="Hole / Perforation 93%")]),
 }
 
 
 def pick_scenario(filename: str, data: bytes) -> str:
     n = (filename or "").lower()
-    for key, words in (("crack", ["crack"]), ("corrosion", ["rust", "corros"]), ("scratch", ["scratch"]), ("wear", ["wear"]), ("pass", ["pass", "good", "clean"])):
+    for key, words in (("crack", ["crack"]), ("corrosion", ["rust", "corros"]), ("scratch", ["scratch"]), ("wear", ["wear"]), ("hole", ["hole", "perforat"]), ("pass", ["pass", "good", "clean"])):
         if any(w in n for w in words):
             return key
     return list(SCENARIOS)[zlib.crc32(data) % len(SCENARIOS)]

@@ -325,7 +325,7 @@ function InspectPage() {
               <div>
                 <div className="label-xs mb-2">Class probabilities</div>
                 {[...DEFECT_TYPES, "No Defect" as const].map((d) => {
-                  const p = d === (result.defect ?? "No Defect") ? result.confidence : (1 - result.confidence) / 5;
+                  const p = d === (result.defect ?? "No Defect") ? result.confidence : (1 - result.confidence) / 6;
                   return (
                     <div key={d} className="mb-1.5 grid grid-cols-[110px_1fr_48px] items-center gap-2">
                       <span className="text-xs text-muted-foreground">{d}</span>
