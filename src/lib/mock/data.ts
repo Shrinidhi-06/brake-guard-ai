@@ -54,7 +54,7 @@ function buildSeed(): Inspection[] {
       explanation: s.explanation,
       recommendation: s.recommendation,
       action: critical ? "SCRAP COMPONENT" : s.action,
-      operator: OPERATORS[i % OPERATORS.length],
+      operator: OPERATORS[i % OPERATORS.length] ?? "R. Sharma",
       image: DEMO_IMAGES[key],
       boxes: s.boxes,
       source: "demo",
@@ -103,10 +103,10 @@ export function analyticsFor(range: RangeKey) {
     { type: "Uneven Wear", count: Math.round(defects * 0.19) },
     { type: "Other", count: 0 },
   ];
-  byType[4].count = Math.max(0, defects - byType.slice(0, 4).reduce((a, b) => a + b.count, 0));
+  byType[4]!.count = Math.max(0, defects - byType.slice(0, 4).reduce((a, b) => a + b.count, 0));
   const points = range === "today" ? 12 : range === "7d" ? 7 : 30;
   const overTime = Array.from({ length: points }, (_, i) => ({
-    label: range === "today" ? `${String(i * 2).padStart(2, "0")}:00` : range === "7d" ? ["Fri", "Sat", "Sun", "Mon", "Tue", "Wed", "Thu"][i] : `D${i + 1}`,
+    label: range === "today" ? `${String(i * 2).padStart(2, "0")}:00` : range === "7d" ? (["Fri", "Sat", "Sun", "Mon", "Tue", "Wed", "Thu"][i] ?? "") : `D${i + 1}`,
     defects: Math.max(0, Math.round((defects / points) * (0.5 + r()))),
     inspected: Math.round((total / points) * (0.8 + r() * 0.4)),
     risk: +(14 + r() * 10 + (i % 5 === 3 ? 8 : 0)).toFixed(1),
