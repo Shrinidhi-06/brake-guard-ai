@@ -16,7 +16,7 @@ SCENARIOS = {
     "wear": dict(status="defect", defect="Uneven Wear", severity="medium", confidence=0.904, risk=0.52, recommendation="Hold for rework",
                  boxes=[dict(x=58, y=10, w=30, h=24, label="Uneven Wear 90%")]),
     "hole": dict(status="defect", defect="Hole / Perforation", severity="critical", confidence=0.928, risk=0.95,
-                 recommendation="Stop inspection and perform detailed component inspection/replacement assessment.",
+                 recommendation="Inspect the component for structural damage and replace/reject if the hole is unintended or outside the approved design specification.",
                  boxes=[dict(x=68, y=12, w=16, h=16, label="Hole / Perforation 93%")]),
 }
 
