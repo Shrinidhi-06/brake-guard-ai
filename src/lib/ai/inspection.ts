@@ -100,17 +100,17 @@ export const SCENARIOS: Record<ScenarioKey, { label: string; result: ScenarioRes
     },
   },
   hole: {
-    label: "Hole / Perforation — High",
+    label: "Hole / Perforation — Critical",
     result: {
       status: "defect",
       defect: "Hole / Perforation",
-      severity: "high",
+      severity: "critical",
       confidence: 0.928,
-      risk: 0.79,
+      risk: 0.95,
       explanation:
-        "A physical opening with a clear boundary and a darker interior region (approximately circular/oval) was detected on the disc. This is classified as a hole / perforation rather than surface corrosion.",
-      action: "REJECT / VERIFY DESIGN",
-      recommendation: "Inspect the component for structural damage and replace/reject if the hole is unintended or outside the approved design specification.",
+        "A through-hole / perforation with raised metal burrs was detected on the braking surface. A perforation compromises the structural integrity of the rotor and makes it unsafe for use.",
+      action: "STOP INSPECTION",
+      recommendation: "Stop inspection and perform detailed component inspection/replacement assessment.",
       boxes: [{ x: 68, y: 12, w: 16, h: 16, label: "Hole / Perforation 93%" }],
     },
   },
