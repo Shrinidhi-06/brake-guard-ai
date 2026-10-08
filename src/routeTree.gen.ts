@@ -10,12 +10,27 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as HistoryRouteImport } from './routes/history'
 import { Route as InspectRouteImport } from './routes/inspect'
 import { Route as MonitoringRouteImport } from './routes/monitoring'
+import { Route as RiskRouteImport } from './routes/risk'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SimulatorRouteImport } from './routes/simulator'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InspectRoute = InspectRouteImport.update({
@@ -28,35 +43,95 @@ const MonitoringRoute = MonitoringRouteImport.update({
   path: '/monitoring',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RiskRoute = RiskRouteImport.update({
+  id: '/risk',
+  path: '/risk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SimulatorRoute = SimulatorRouteImport.update({
+  id: '/simulator',
+  path: '/simulator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/history': typeof HistoryRoute
   '/inspect': typeof InspectRoute
   '/monitoring': typeof MonitoringRoute
+  '/risk': typeof RiskRoute
+  '/settings': typeof SettingsRoute
+  '/simulator': typeof SimulatorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/history': typeof HistoryRoute
   '/inspect': typeof InspectRoute
   '/monitoring': typeof MonitoringRoute
+  '/risk': typeof RiskRoute
+  '/settings': typeof SettingsRoute
+  '/simulator': typeof SimulatorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/history': typeof HistoryRoute
   '/inspect': typeof InspectRoute
   '/monitoring': typeof MonitoringRoute
+  '/risk': typeof RiskRoute
+  '/settings': typeof SettingsRoute
+  '/simulator': typeof SimulatorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/inspect' | '/monitoring'
+  fullPaths:
+    | '/'
+    | '/analytics'
+    | '/history'
+    | '/inspect'
+    | '/monitoring'
+    | '/risk'
+    | '/settings'
+    | '/simulator'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/inspect' | '/monitoring'
-  id: '__root__' | '/' | '/inspect' | '/monitoring'
+  to:
+    | '/'
+    | '/analytics'
+    | '/history'
+    | '/inspect'
+    | '/monitoring'
+    | '/risk'
+    | '/settings'
+    | '/simulator'
+  id:
+    | '__root__'
+    | '/'
+    | '/analytics'
+    | '/history'
+    | '/inspect'
+    | '/monitoring'
+    | '/risk'
+    | '/settings'
+    | '/simulator'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalyticsRoute: typeof AnalyticsRoute
+  HistoryRoute: typeof HistoryRoute
   InspectRoute: typeof InspectRoute
   MonitoringRoute: typeof MonitoringRoute
+  RiskRoute: typeof RiskRoute
+  SettingsRoute: typeof SettingsRoute
+  SimulatorRoute: typeof SimulatorRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -66,6 +141,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inspect': {
@@ -82,13 +171,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MonitoringRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/risk': {
+      id: '/risk'
+      path: '/risk'
+      fullPath: '/risk'
+      preLoaderRoute: typeof RiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/simulator': {
+      id: '/simulator'
+      path: '/simulator'
+      fullPath: '/simulator'
+      preLoaderRoute: typeof SimulatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalyticsRoute: AnalyticsRoute,
+  HistoryRoute: HistoryRoute,
   InspectRoute: InspectRoute,
   MonitoringRoute: MonitoringRoute,
+  RiskRoute: RiskRoute,
+  SettingsRoute: SettingsRoute,
+  SimulatorRoute: SimulatorRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

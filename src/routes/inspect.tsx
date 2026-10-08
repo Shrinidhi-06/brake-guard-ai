@@ -70,7 +70,7 @@ function InspectPage() {
     reader.readAsDataURL(f);
   }
 
-  function useSample(k: ScenarioKey) {
+  function pickSample(k: ScenarioKey) {
     setImage(DEMO_IMAGES[k]);
     setFileName(`demo-brake-disc-${k}.jpg`);
     setAutoKey(k);
@@ -214,7 +214,7 @@ function InspectPage() {
               <div className="label-xs mb-2">Or use a demo image</div>
               <div className="grid grid-cols-4 gap-2">
                 {SAMPLES.map((s) => (
-                  <button key={s.key} onClick={() => useSample(s.key)} className={cn("group overflow-hidden rounded-md border text-left transition-colors", fileName === `demo-brake-disc-${s.key}.jpg` ? "border-primary" : "border-border hover:border-primary/50")}>
+                  <button key={s.key} onClick={() => pickSample(s.key)} className={cn("group overflow-hidden rounded-md border text-left transition-colors", fileName === `demo-brake-disc-${s.key}.jpg` ? "border-primary" : "border-border hover:border-primary/50")}>
                     <img src={DEMO_IMAGES[s.key]} alt={`Demo ${s.label} brake disc`} loading="lazy" width={1024} height={1024} className="aspect-square w-full object-cover opacity-80 group-hover:opacity-100" />
                     <div className="px-2 py-1 text-[11px]">{s.label}</div>
                   </button>
