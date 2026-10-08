@@ -8,8 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { ANALYSIS_STEPS, SCENARIOS, analyzeImage, scenarioFromFile, type ScenarioKey, type ScenarioResult } from "@/lib/ai/inspection";
-import { detectHoles } from "@/lib/ai/holeDetector";
-import type { BoundingBox } from "@/types";
 import { DEFECT_TYPES, DEMO_IMAGES } from "@/lib/mock/data";
 import { loadSettings, nextComponentId, nextInspectionId, saveInspection } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -50,7 +48,6 @@ function InspectPage() {
   const [drag, setDrag] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
-  const [holeBoxes, setHoleBoxes] = useState<BoundingBox[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const reset = useCallback(() => {
@@ -63,15 +60,10 @@ function InspectPage() {
     if (!ACCEPT.includes(f.type)) { toast.error("Unsupported file type", { description: "Please upload a JPG, JPEG or PNG image." }); return; }
     if (f.size > 10 * 1024 * 1024) { toast.error("File too large", { description: "Maximum size is 10 MB." }); return; }
     const reader = new FileReader();
-    reader.onload = async () => {
-      const url = reader.result as string;
-      setImage(url);
+    reader.onload = () => {
+      setImage(reader.result as string);
       setFileName(f.name);
-      let boxes: BoundingBox[] = [];
-      try { boxes = await detectHoles(url); } catch { boxes = []; }
-      setHoleBoxes(boxes);
-      // Physical openings take priority over corrosion/texture-based scenarios.
-      setAutoKey(boxes.length > 0 ? "hole" : scenarioFromFile(f.name, f.size));
+      setAutoKey(scenarioFromFile(f.name, f.size));
       setPhase("ready"); setResult(null); setSaved(false);
       toast.success("Image loaded", { description: f.name });
     };
@@ -82,7 +74,6 @@ function InspectPage() {
   function pickSample(k: ScenarioKey) {
     setImage(DEMO_IMAGES[k]);
     setFileName(`demo-brake-disc-${k}.jpg`);
-    setHoleBoxes([]);
     setAutoKey(k);
     setPhase("ready"); setResult(null); setSaved(false);
   }
@@ -98,7 +89,6 @@ function InspectPage() {
     }
     try {
       const res = await analyzeImage(activeKey);
-      if (activeKey === "hole" && holeBoxes.length > 0) res.boxes = holeBoxes;
       const rec: Inspection = {
         id: nextInspectionId(),
         componentId: nextComponentId(),
