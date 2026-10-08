@@ -54,10 +54,10 @@ function InspectPage() {
     if (inputRef.current) inputRef.current.value = "";
   }, []);
 
-  function acceptFile(f: File | undefined) {
+  function acceptFile(f: File | undefined): void {
     if (!f) return;
-    if (!ACCEPT.includes(f.type)) return toast.error("Unsupported file type", { description: "Please upload a JPG, JPEG or PNG image." });
-    if (f.size > 10 * 1024 * 1024) return toast.error("File too large", { description: "Maximum size is 10 MB." });
+    if (!ACCEPT.includes(f.type)) { toast.error("Unsupported file type", { description: "Please upload a JPG, JPEG or PNG image." }); return; }
+    if (f.size > 10 * 1024 * 1024) { toast.error("File too large", { description: "Maximum size is 10 MB." }); return; }
     const reader = new FileReader();
     reader.onload = () => {
       setImage(reader.result as string);
@@ -367,7 +367,7 @@ function InspectPage() {
   );
 }
 
-function Stat({ label, value, color, big }: { label: React.ReactNode; value: React.ReactNode; color?: string; big?: boolean }) {
+function Stat({ label, value, color, big }: { label: React.ReactNode; value: React.ReactNode; color?: string | undefined; big?: boolean }) {
   return (
     <div className="rounded-lg border border-border bg-background/40 p-3">
       <div className="label-xs">{label}</div>

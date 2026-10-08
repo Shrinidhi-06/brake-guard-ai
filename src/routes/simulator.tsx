@@ -169,7 +169,7 @@ function SimulatorPage() {
   );
 }
 
-function BigNum({ label, value, color }: { label: string; value: number | null; color?: string }) {
+function BigNum({ label, value, color }: { label: string; value: number | null; color?: string | undefined }) {
   return (
     <div className="rounded-xl border border-border bg-background/40 p-4">
       <div className="label-xs">{label}</div>

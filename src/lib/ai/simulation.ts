@@ -32,7 +32,7 @@ export function simulate(current: OperatingConditions, simulated: OperatingCondi
         : "Simulated conditions do not reduce risk. Reduce vibration to approximately 3.0 mm/s and lower temperature to approximately 85°C.";
   } else {
     const s = tips.join(" and ");
-    recommendation = s[0].toUpperCase() + s.slice(1) + ".";
+    recommendation = s.charAt(0).toUpperCase() + s.slice(1) + ".";
   }
   return { currentRisk, simulatedRisk, riskReduction, reductionLevel, recommendation };
 }
